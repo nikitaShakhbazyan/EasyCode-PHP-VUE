@@ -11,6 +11,13 @@
       <label for="email">Email:</label>
       <input type="email" id="email" v-model="userData.email" required>
       <br>
+      <label>Выберите метод подтверждения:</label>
+      <select v-model="selectedMethod">
+        <option value="email">Email</option>
+        <option value="sms">СМС</option>
+        <option value="telegram">Телеграм</option>
+      </select>
+      <br>
       <button type="submit">Добавить</button>
     </form>
   </div>
@@ -25,21 +32,30 @@ const userData = ref({
   email: ''
 });
 
+const selectedMethod = ref('email');
+
 async function submitForm() {
   try {
-    const response = await fetch('http://localhost:8000/users', {
-      method: 'POST',
-      mode:"cors",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userData.value)
-    });
-    const data = await response.json();
-    console.log(data);
+    const confirmationCode = generateConfirmationCode();
+    console.log('Confirmation code:', confirmationCode);
+
+    if (selectedMethod.value === 'email') {
+      console.log('Отправка кода на Email:', userData.value.email);
+    } else if (selectedMethod.value === 'sms') {
+      console.log('Отправка кода по СМС на номер телефона');
+    } else if (selectedMethod.value === 'telegram') {
+      console.log('Отправка кода в Телеграм');
+    }
+
+    const userEnteredCode = prompt('Введите код подтверждения:');
+
   } catch (error) {
     console.error(error);
   }
+}
+
+function generateConfirmationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 </script>
 
@@ -51,6 +67,12 @@ async function submitForm() {
 
 .user-form input[type="text"],
 .user-form input[type="email"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.user-form select {
   width: 100%;
   padding: 0.5rem;
   margin-bottom: 1rem;
