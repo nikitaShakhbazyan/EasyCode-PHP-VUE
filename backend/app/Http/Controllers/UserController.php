@@ -30,12 +30,16 @@ class UserController extends Controller
             'name' => 'required|string',
             'surname' => 'required|string',
             'email' => 'required|email|unique:user_models,email',
+            'confirmation_method' => 'required|string',
+            'confirmation_code' => 'required|string'
         ]);
 
         $user = UserModel::create([
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
+            'confirmation_method' => $request->confirmation_method,
+            'confirmation_code' => $request->confirmation_code
         ]);
 
         return response()->json($user, 201);

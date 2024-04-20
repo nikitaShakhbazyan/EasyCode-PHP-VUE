@@ -12,7 +12,9 @@ class UserModel extends Model
     protected $fillable = [
         'name',
         'surname',
-        'email'
+        'email',
+        'confirmation_method',
+        'confirmation_code'
     ];
 }
 

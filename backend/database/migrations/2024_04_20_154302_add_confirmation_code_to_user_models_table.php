@@ -11,14 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_models', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('surname');
-            $table->string('email');
-            $table->string('confirmation_method')->nullable(); 
+        Schema::table('user_models', function (Blueprint $table) {
             $table->string('confirmation_code')->nullable();
-            $table->timestamps();
         });
     }
 
@@ -27,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_models');
+        Schema::table('user_models', function (Blueprint $table) {
+            $table->dropColumn('confirmation_code');
+        });
     }
 };
