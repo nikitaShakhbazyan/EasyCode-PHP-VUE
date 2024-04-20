@@ -41,11 +41,9 @@ async function submitForm() {
 
     const userEnteredCode = prompt('Введите код подтверждения:');
 
-    // Проверка введенного пользователем кода
     if (userEnteredCode === confirmationCode) {
       console.log('Код подтверждения верный.');
       
-      // Отправка данных о пользователе на сервер
       const response = await fetch('http://localhost:8000/users', {
         method: 'POST',
         headers: {
@@ -55,8 +53,8 @@ async function submitForm() {
           name: userData.value.name,
           surname: userData.value.surname,
           email: userData.value.email,
-          confirmationCode: confirmationCode,
-          confirmationMethod: selectedMethod.value
+          confirmation_method: selectedMethod.value,
+          confirmation_code: confirmationCode
         })
       });
 
