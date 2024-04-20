@@ -39,15 +39,38 @@ async function submitForm() {
     const confirmationCode = generateConfirmationCode();
     console.log('Confirmation code:', confirmationCode);
 
-    if (selectedMethod.value === 'email') {
-      console.log('Отправка кода на Email:', userData.value.email);
-    } else if (selectedMethod.value === 'sms') {
-      console.log('Отправка кода по СМС на номер телефона');
-    } else if (selectedMethod.value === 'telegram') {
-      console.log('Отправка кода в Телеграм');
-    }
-
     const userEnteredCode = prompt('Введите код подтверждения:');
+
+    // Проверка введенного пользователем кода
+    if (userEnteredCode === confirmationCode) {
+      console.log('Код подтверждения верный.');
+      
+      // Отправка данных о пользователе на сервер
+      const response = await fetch('http://localhost:8000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: userData.value.name,
+          surname: userData.value.surname,
+          email: userData.value.email,
+          confirmationCode: confirmationCode,
+          confirmationMethod: selectedMethod.value
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit user data');
+      }
+
+      const data = await response.json();
+      console.log('Server response:', data);
+      alert("Код правильный, ваши данные сохранились")
+    } else {
+      console.log('Код подтверждения неверный.');
+      alert('Код подтверждения неверный.')
+    }
 
   } catch (error) {
     console.error(error);
